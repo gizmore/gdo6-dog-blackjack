@@ -4,9 +4,11 @@ namespace GDO\DogBlackjack;
 use GDO\Dog\DOG_User;
 
 /**
+ * Blackjack game implementation for the gdo6-dog chatbot.
  * 
+ * In memory of Sheep.
  * @author gizmore
- *
+ * @version 6.10.4
  */
 final class Game
 {
@@ -74,6 +76,7 @@ final class Game
             $this->hand[] = array_pop($this->cards);
         }
 
+        $hand = implode(', ', $this->hand);
         
         $this->user->send(t('msg_blackjack_draw', [$amt, $hand]));
     }
@@ -84,4 +87,25 @@ final class Game
         $this->hand = [];
         $this->shuffle();
     }
+    
+    public function handValue()
+    {
+        return $this->handValueFor($this->hand);
+    }
+    
+    public function handValueFor($hand)
+    {
+        
+        
+    }
+    
+    public function handBusted()
+    {
+        if ($this->handValue() > 21)
+        {
+            
+        }
+        
+    }
+    
 }

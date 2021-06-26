@@ -21,7 +21,7 @@ final class Module_DogBlackjack extends GDO_Module
         ];
     }
     
-    public function getUserSettings()
+    public function getUserConfig()
     {
         return [
             GDT_UInt::make('blackjack_games')->initial('0'),
