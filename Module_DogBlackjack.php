@@ -2,7 +2,7 @@
 namespace GDO\DogBlackjack;
 
 use GDO\Core\GDO_Module;
-use GDO\DB\GDT_UInt;
+use GDO\Core\GDT_UInt;
 
 /**
  * Blackjack cardgame for the dog chatbot.
@@ -12,9 +12,9 @@ use GDO\DB\GDT_UInt;
  */
 final class Module_DogBlackjack extends GDO_Module
 {
-    public function onLoadLanguage() { return $this->loadLanguage('lang/blackjack'); }
+    public function onLoadLanguage() : void { $this->loadLanguage('lang/blackjack'); }
     
-    public function getConfig()
+    public function getConfig() : array
     {
         return [
             GDT_UInt::make('total_games')->initial('0'),

@@ -4,7 +4,7 @@ namespace GDO\DogBlackjack\Method;
 use GDO\Dog\DOG_Command;
 use GDO\Dog\DOG_Message;
 use GDO\DogBlackjack\Game;
-use GDO\DB\GDT_UInt;
+use GDO\Core\GDT_UInt;
 
 /**
  * Initiate a game.
@@ -17,7 +17,7 @@ final class Bet extends DOG_Command
     
     public function isRoomMethod() { return false; }
     
-    public function gdoParameters()
+    public function gdoParameters() : array
     {
         return [
             GDT_UInt::make('bet')->min(10)->max(1000000)->notNull(),

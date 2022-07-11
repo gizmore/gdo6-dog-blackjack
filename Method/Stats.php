@@ -4,7 +4,7 @@ namespace GDO\DogBlackjack\Method;
 use GDO\Dog\DOG_Command;
 use GDO\Dog\DOG_Message;
 use GDO\DogBlackjack\Game;
-use GDO\DB\GDT_UInt;
+use GDO\Core\GDT_UInt;
 use GDO\Dog\GDT_DogUser;
 use GDO\Dog\DOG_User;
 
@@ -19,7 +19,7 @@ final class Stats extends DOG_Command
     
     public function isRoomMethod() { return true; }
     
-    public function gdoParameters()
+    public function gdoParameters() : array
     {
         return [
             GDT_DogUser::make('user')->thyself(),
