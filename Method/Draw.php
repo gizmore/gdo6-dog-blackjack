@@ -11,9 +11,11 @@ use GDO\DogBlackjack\Game;
  */
 final class Draw extends DOG_Command
 {
-    public $group = 'BJ';
-    public $trigger = 'draw';
-    
+	public function getCLITrigger()
+	{
+		return 'bj.draw';
+	}
+	
     public function dogExecute(DOG_Message $message)
     {
         $game = Game::instance($message->user);

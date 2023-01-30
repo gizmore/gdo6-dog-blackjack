@@ -12,8 +12,10 @@ use GDO\Core\GDT_UInt;
  */
 final class Bet extends DOG_Command
 {
-    public $group = 'BJ';
-    public $trigger = 'bet';
+    public function getCLITrigger()
+    {
+    	return 'bj.bet';
+    }
     
     public function isRoomMethod() { return false; }
     

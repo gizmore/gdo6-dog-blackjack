@@ -3,26 +3,28 @@ namespace GDO\DogBlackjack\Method;
 
 use GDO\Dog\DOG_Command;
 use GDO\Dog\DOG_Message;
-use GDO\DogBlackjack\Game;
-use GDO\Core\GDT_UInt;
-use GDO\Dog\GDT_DogUser;
 use GDO\Dog\DOG_User;
+use GDO\Dog\GDT_DogUser;
 
 /**
- * Initiate a game.
  * @author gizmore
  */
 final class Stats extends DOG_Command
 {
     public $group = 'BJ';
     public $trigger = 'stats';
+   
+    public function getCLITrigger()
+    {
+    	return 'bj.stats';
+    }
     
     public function isRoomMethod() { return true; }
     
     public function gdoParameters() : array
     {
         return [
-            GDT_DogUser::make('user')->thyself(),
+            GDT_DogUser::make('user'),
         ];
     }
     

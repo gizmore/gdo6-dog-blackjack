@@ -15,6 +15,11 @@ final class Reset extends DOG_Command
     public $group = 'BJ';
     public $trigger = 'reset';
     
+    public function getCLITrigger()
+    {
+    	return 'bj.reset';
+    }
+    
     public function dogExecute(DOG_Message $message)
     {
         $user = $message->user->getGDOUser();
