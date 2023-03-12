@@ -12,8 +12,6 @@ use GDO\DogBlackjack\Module_DogBlackjack;
  */
 final class Reset extends DOG_Command
 {
-    public $group = 'BJ';
-    public $trigger = 'reset';
     
     public function getCLITrigger()
     {
@@ -26,6 +24,8 @@ final class Reset extends DOG_Command
         $game = Game::instance($message->user);
         $game->over();
         Module_DogBlackjack::instance()->saveUserSetting($user, 'blackjack_coins', '100');
+        $coins = $user->settingVar('DogBlackjack', 'blackjack_coins');
+        $message->user->send(t('msg_bj_reset', [$coins]));
     }
     
 }

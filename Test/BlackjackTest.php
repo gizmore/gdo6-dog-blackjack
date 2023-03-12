@@ -13,7 +13,7 @@ final class BlackjackTest extends DogTestCase
         $this->dogUser('gizmore{1}');
         $r = $this->bashCommand('bj.reset');
         assertStringContainsStringIgnoringCase('100', $r, "Check if game can be reset.");
-        assertStringContainsStringIgnoringCase('started', $r, "Check if game can be reset.");
+        assertStringContainsStringIgnoringCase('shuff', $r, "Check if game can be reshuffle resetted.");
         
         # Bet 50
         $this->dogUser('gizmore{1}');
