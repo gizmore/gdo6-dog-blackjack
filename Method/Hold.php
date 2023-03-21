@@ -7,21 +7,23 @@ use GDO\DogBlackjack\Game;
 
 /**
  * Hold and let the dealer draw.
+ *
  * @author gizmore
  */
 final class Hold extends DOG_Command
 {
-    public $group = 'BJ';
-    public $trigger = 'hold';
-    public function getCLITrigger()
-    {
-    	return 'bj.hold';
-    }
-    
-    public function dogExecute(DOG_Message $message)
-    {
-        $game = Game::instance($message->user);
-        
-    }
+
+	public $group = 'BJ';
+	public $trigger = 'hold';
+
+	public function getCLITrigger()
+	{
+		return 'bj.hold';
+	}
+
+	public function dogExecute(DOG_Message $message)
+	{
+		$game = Game::instance($message->user);
+	}
 
 }

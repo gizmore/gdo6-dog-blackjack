@@ -7,19 +7,21 @@ use GDO\DogBlackjack\Game;
 
 /**
  * Draw another card.
+ *
  * @author gizmore
  */
 final class Draw extends DOG_Command
 {
+
 	public function getCLITrigger()
 	{
 		return 'bj.draw';
 	}
-	
-    public function dogExecute(DOG_Message $message)
-    {
-        $game = Game::instance($message->user);
-        $game->draw(1);
-    }
-    
+
+	public function dogExecute(DOG_Message $message)
+	{
+		$game = Game::instance($message->user);
+		$game->draw(1);
+	}
+
 }
