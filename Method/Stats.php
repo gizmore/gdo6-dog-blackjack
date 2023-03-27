@@ -15,7 +15,7 @@ final class Stats extends DOG_Command
 	public $group = 'BJ';
 	public $trigger = 'stats';
 
-	public function getCLITrigger()
+	public function getCLITrigger(): string
 	{
 		return 'bj.stats';
 	}

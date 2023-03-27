@@ -16,7 +16,7 @@ final class Hold extends DOG_Command
 	public $group = 'BJ';
 	public $trigger = 'hold';
 
-	public function getCLITrigger()
+	public function getCLITrigger(): string
 	{
 		return 'bj.hold';
 	}

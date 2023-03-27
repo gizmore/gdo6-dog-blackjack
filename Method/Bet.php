@@ -14,7 +14,7 @@ use GDO\DogBlackjack\Game;
 final class Bet extends DOG_Command
 {
 
-	public function getCLITrigger()
+	public function getCLITrigger(): string
 	{
 		return 'bj.bet';
 	}

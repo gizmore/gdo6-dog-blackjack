@@ -14,7 +14,7 @@ use GDO\DogBlackjack\Module_DogBlackjack;
 final class Reset extends DOG_Command
 {
 
-	public function getCLITrigger()
+	public function getCLITrigger(): string
 	{
 		return 'bj.reset';
 	}

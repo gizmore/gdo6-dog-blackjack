@@ -13,7 +13,7 @@ use GDO\DogBlackjack\Game;
 final class Draw extends DOG_Command
 {
 
-	public function getCLITrigger()
+	public function getCLITrigger(): string
 	{
 		return 'bj.draw';
 	}
