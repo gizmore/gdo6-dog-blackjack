@@ -1,14 +1,17 @@
 <?php
+declare(strict_types=1);
 namespace GDO\DogBlackjack;
 
+use GDO\Dog\DOG_Message;
 use GDO\Dog\DOG_User;
+use GDO\Util\Permutations;
 
 /**
  * Blackjack game implementation for the gdo6-dog chatbot.
  *
  * In memory of Sheep.
  *
- * @version 6.10.4
+ * @version 7.0.3
  * @author gizmore
  */
 final class Game
@@ -17,13 +20,14 @@ final class Game
 	###############
 	### Factory ###
 	###############
-	public static $GAMES = [];
-	private $bet = 0;
+	public static array $GAMES = [];
+
+	private int $bet = 0;
 
 	###
-	private $user;
-	private $cards;
-	private $hand;
+	private DOG_User $user;
+	private array $cards = [];
+	private array $hand = [];
 
 	public function __construct(DOG_User $user)
 	{
@@ -31,75 +35,197 @@ final class Game
 		$this->shuffle();
 	}
 
-	private function shuffle()
+	public function rply(string $key, array $args=null): bool
+	{
+		return DOG_Message::$LAST_MESSAGE->rply($key, $args);
+	}
+
+	private function shuffle(): void
 	{
 		$this->user->send(t('msg_bj_shuffle'));
 		$cards = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
-		$this->cards = array_merge($cards, $cards, $cards, $cards,
+		$this->cards = array_merge(
+			$cards, $cards, $cards, $cards,
 			$cards, $cards, $cards, $cards);
 		shuffle($this->cards);
 	}
 
-	/**
-	 * @param DOG_User $user
-	 *
-	 * @return self
-	 */
-	public static function instance(DOG_User $user)
+	public static function instance(DOG_User $user): Game
 	{
-		if (!isset(self::$GAMES[$user->getID()]))
+		$uid = $user->getID();
+		if (!isset(self::$GAMES[$uid]))
 		{
-			self::$GAMES[$user->getID()] = new self($user);
+			self::$GAMES[$uid] = new self($user);
 		}
-		return self::$GAMES[$user->getID()];
+		return self::$GAMES[$uid];
 	}
 
-	public function value() {}
 
-	public function hasBet()
+	public function hasBet(): bool
 	{
 		return $this->bet > 0;
 	}
 
-	public function bet($bet)
+	public function bet(int $bet): ?array
 	{
-		$this->bet = $bet;
-		$this->hand = [];
-		$this->draw(2);
+		$m = Module_DogBlackjack::instance();
+		$min = $m->cfgMinBet();
+		$have = $m->getCredits($this->user);
+		if ($bet < $min)
+		{
+			$this->rply('err_blackjack_min', [$bet, $have]);
+		}
+		elseif ($have < $bet)
+		{
+			$this->rply('err_blackjack_money', [$bet, $have]);
+		}
+		else
+		{
+			$m->bet($this->user, $bet);
+			$this->bet = $bet;
+			$this->hand = [];
+			return $this->draw(2);
+		}
+		return null;
 	}
 
-	public function draw($amt)
+	public function draw(int $amt=1): array
 	{
 		for ($i = 0; $i < $amt; $i++)
 		{
-			$this->hand[] = array_pop($this->cards);
+			$this->hand[] = $this->drawCard();
 		}
-
-		$hand = implode(', ', $this->hand);
-
-		$this->user->send(t('msg_blackjack_draw', [$amt, $hand]));
+		return $this->hand;
 	}
 
-	public function over()
+	public function drawCard(): string
+	{
+		return array_pop($this->cards);
+	}
+
+	public function over(bool $shuffle=false): bool
 	{
 		$this->bet = 0;
 		$this->hand = [];
-		$this->shuffle();
+		if ( ($shuffle) || (count($this->cards) < 32) )
+		{
+			$this->shuffle();
+		}
+		return true;
 	}
 
-	public function handBusted()
+	public function handBusted(array $cards): bool
 	{
-		if ($this->handValue() > 21)
-		{
+		return $this->handValue($cards) > 21;
+	}
 
+	/**
+	 * Compute the BJ hand strength.
+	 * @param string[] $cards
+	 */
+	public function handValue(array $cards, bool &$bj=null): int
+	{
+		$bj = false;
+		$perms = [];
+		foreach ($cards as $card)
+		{
+			$perms[] = $this->cardValue($card);
+		}
+		$min = 137;
+		$max = 0;
+		$perms = new Permutations($perms);
+		foreach ($perms->generate() as $p)
+		{
+			$sum = array_sum($p);
+			if ($sum == 21)
+			{
+				$bj = true;
+				return 21;
+			}
+			elseif ($sum < 21)
+			{
+				$max = max($sum, $max);
+			}
+			$min = min($sum, $min);
+		}
+		if ( (count($cards) >= 5) && ($min <= 21))
+		{
+			$bj = true;
+			return 21;
+		}
+		if ($min > 21)
+		{
+			return $min;
+		}
+		return $max;
+	}
+
+	/**
+	 * @return int[]
+	 */
+	private function cardValue(string $card): array
+	{
+		switch ($card)
+		{
+			case '10':
+			case 'J':case 'Q':case 'K':
+				return [10];
+			case 'A':
+				return [11, 1];
+			default:
+				return [(int)$card];
 		}
 	}
 
-	public function handValue()
+	public function running(): bool
 	{
-		return $this->handValueFor($this->hand);
+		if ($this->hasBet())
+		{
+			return true;
+		}
+		$this->rply('err_blackjack_no_game');
+		return false;
 	}
 
-	public function handValueFor($hand) {}
+	public function playerValue(): int
+	{
+		return $this->handValue($this->hand);
+	}
+
+	public function getCredits(): int
+	{
+		return Module_DogBlackjack::instance()->getCredits($this->user);
+	}
+
+	public function lost(bool $bj = false): int
+	{
+		$m = Module_DogBlackjack::instance();
+		$m->saveGame($this->user, -$this->bet, $bj);
+		$loss = $this->bet;
+		$this->over();
+		return $loss;
+	}
+
+	public function won(bool $bj=false): int
+	{
+		$m = Module_DogBlackjack::instance();
+		$win = $this->bet * ($bj ? 4 : 2);
+		$m->saveGame($this->user, $win, $bj);
+		$this->over();
+		return $win;
+	}
+
+	public function renderHand(array $cards): string
+	{
+		return t('bj_hand', [
+			count($cards),
+			implode(', ', $cards),
+			$this->handValue($cards)]);
+	}
+
+	public function getBet(): int
+	{
+		return $this->bet;
+	}
 
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace GDO\DogBlackjack\Method;
 
 use GDO\Dog\DOG_Command;
@@ -19,13 +20,13 @@ final class Reset extends DOG_Command
 		return 'bj.reset';
 	}
 
-	public function dogExecute(DOG_Message $message)
+	public function dogExecute(DOG_Message $message): void
 	{
 		$user = $message->user->getGDOUser();
 		$game = Game::instance($message->user);
-		$game->over();
-		Module_DogBlackjack::instance()->saveUserSetting($user, 'blackjack_coins', '100');
-		$coins = $user->settingVar('DogBlackjack', 'blackjack_coins');
+		$game->over(true);
+		Module_DogBlackjack::instance()->saveUserSetting($user, 'bj_coins', '100');
+		$coins = $user->settingVar('DogBlackjack', 'bj_coins');
 		$message->user->send(t('msg_bj_reset', [$coins]));
 	}
 
