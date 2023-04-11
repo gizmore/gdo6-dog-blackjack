@@ -17,6 +17,13 @@ use GDO\Dog\DOG_User;
 final class Module_DogBlackjack extends GDO_Module
 {
 
+	public function getDependencies(): array
+	{
+		return [
+			'Dog',
+		];
+	}
+
 	public function onLoadLanguage(): void
 	{
 		$this->loadLanguage('lang/blackjack');
