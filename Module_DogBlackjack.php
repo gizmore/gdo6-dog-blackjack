@@ -122,11 +122,11 @@ final class Module_DogBlackjack extends GDO_Module
 		$this->increaseConfigVar('bank_games');
 		$this->increaseConfigVar('bank_coins', -$credits);
 		$this->increaseUserSetting($usr, 'bj_games');
-		$this->increaseUserSetting($usr, 'bj_coins', $credits);
-		$this->increaseUserSetting($usr, 'bj_net', $credits);
-		if ($credits > 0)
-		{
-			$this->increaseUserSetting($usr, 'bj_won');
+        $this->increaseUserSetting($usr, 'bj_net', $credits);
+        if ($credits > 0)
+        {
+            $this->increaseUserSetting($usr, 'bj_coins', $credits);
+            $this->increaseUserSetting($usr, 'bj_won');
 			$this->increaseUserSetting($usr, 'bj_bj', $bj ? 1 : 0);
 			$this->increaseConfigVar('bank_lost');
 		}
