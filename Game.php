@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace GDO\DogBlackjack;
 
+use GDO\Core\GDT;
 use GDO\Dog\DOG_Message;
 use GDO\Dog\DOG_User;
 use GDO\Util\Permutations;
@@ -35,7 +36,7 @@ final class Game
 		$this->shuffle();
 	}
 
-	public function rply(string $key, array $args=null): bool
+	public function rply(string $key, array $args=null): GDT
 	{
 		return DOG_Message::$LAST_MESSAGE->rply($key, $args);
 	}

@@ -53,7 +53,7 @@ final class Module_DogBlackjack extends GDO_Module
 			GDT_UInt::make('bj_bj')->initial('0'),
 			GDT_UInt::make('bj_won')->initial('0'),
 			GDT_UInt::make('bj_lost')->initial('0'),
-			GDT_UInt::make('bj_coins')->initial('100'),
+			GDT_UInt::make('bj_coins')->initial('10000'),
 			GDT_Int::make('bj_net')->initial('0'),
 		];
 	}

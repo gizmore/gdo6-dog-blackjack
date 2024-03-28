@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace GDO\DogBlackjack\Method;
 
+use GDO\Core\GDT;
 use GDO\Core\GDT_UInt;
 use GDO\Dog\DOG_Command;
 use GDO\Dog\DOG_Message;
@@ -28,7 +29,7 @@ final class Draw extends DOG_Command
 		];
 	}
 
-	public function dogExecute(DOG_Message $message, int $amount): bool
+	public function dogExecute(DOG_Message $message, int $amount): GDT
 	{
 		$game = Game::instance($message->user);
 		if (!$game->hasBet())

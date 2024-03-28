@@ -26,6 +26,7 @@ return [
 
 	'mt_dogblackjack_bet' => 'Bet money on the next cards.',
 	'bet' => 'Your Bet',
+    'err_bet_failed' => 'Invalid bet',
 	'err_blackjack_min' => 'You have to bet at least %s credits. You currenlty have %s. You can bj.reset to start over.',
 	'err_blackjack_money' => 'You cannot bet %s credits, as you only have %s.',
 	'err_blackjack_not_over' => 'You currently have these cards: %s.',
@@ -46,5 +47,6 @@ return [
 	'msg_blackjack_user_stats' => '%s has played %s games. %s won / %s loss / %s BJ! Credits: %s; Net: %s.',
 	'msg_blackjack_global_stats' => 'The bank has played %s games. %s won / %s loss / %s BJ! Net Worth: %s.',
 	'msg_blackjack_global_bests' => 'The %s best players: %s.',
+    'msg_blackjack_no_players' => 'Nobody played blackjack yet.',
 
 ];

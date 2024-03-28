@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace GDO\DogBlackjack\Method;
 
+use GDO\Core\GDT;
+use GDO\Core\GDT_Response;
 use GDO\Dog\DOG_Command;
 use GDO\Dog\DOG_Message;
 use GDO\DogBlackjack\Game;
@@ -20,7 +22,7 @@ final class Hold extends DOG_Command
 		return 'bj.hold';
 	}
 
-	public function dogExecute(DOG_Message $message): bool
+	public function dogExecute(DOG_Message $message): GDT
 	{
 		$game = Game::instance($message->user);
 		if ($game->running())
@@ -36,7 +38,7 @@ final class Hold extends DOG_Command
 				return $this->won($game, $cards, $bj);
 			}
 		}
-		return false;
+		return GDT_Response::make();
 	}
 
 	private function letDealerPlay(Game $game, array &$cards, bool &$bj=null): bool
@@ -52,24 +54,27 @@ final class Hold extends DOG_Command
 		return $dealer <= 21;
 	}
 
-	private function won(Game $game, array $cards, bool $bj): bool
+	private function won(Game $game, array $cards, bool $bj): GDT
 	{
-		$game->won($bj);
-		return $game->rply('msg_blackjack_dealer_lost', [
+        $win = $game->getBet() * 2;
+		$reply = $game->rply('msg_blackjack_dealer_lost', [
 			count($cards),
 			$game->renderHand($cards),
-			$game->getBet() * 2,
-			$game->getCredits()]);
+			$win,
+			$game->getCredits()+$win]);
+        $game->won($bj);
+        return $reply;
 	}
 
-	private function lost(Game $game, array $cards, bool $bj): bool
+	private function lost(Game $game, array $cards, bool $bj): GDT
 	{
-		$game->lost($bj);
-		return $game->rply('msg_blackjack_dealer_won', [
+        $reply = $game->rply('msg_blackjack_dealer_won', [
 			count($cards),
 			$game->renderHand($cards),
 			$game->getBet(), $game->getCredits()]);
-	}
+        $game->lost($bj);
+        return $reply;
+    }
 
 
 }

@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace GDO\DogBlackjack\Method;
 
+use GDO\Core\GDT;
 use GDO\Core\GDT_UInt;
 use GDO\Dog\DOG_Command;
 use GDO\Dog\DOG_Message;
@@ -20,7 +21,7 @@ final class Bet extends DOG_Command
 		return 'bj.bet';
 	}
 
-	protected function isRoomMethod(): bool { return false; }
+//	protected function isRoomMethod(): bool { return false; }
 
 	public function gdoParameters(): array
 	{
@@ -29,7 +30,7 @@ final class Bet extends DOG_Command
 		];
 	}
 
-	public function dogExecute(DOG_Message $message, int $bet): bool
+	public function dogExecute(DOG_Message $message, int $bet): GDT
 	{
 		$game = Game::instance($message->user);
 		if ($game->hasBet())
@@ -50,7 +51,7 @@ final class Bet extends DOG_Command
 				$bet, count($cards),
 				$game->renderHand($cards), $game->getCredits()]);
 		}
-		return false;
+		return $this->error('err_bet_failed');
 	}
 
 }

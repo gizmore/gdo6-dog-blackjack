@@ -2,6 +2,7 @@
 declare(strict_types=1);
 namespace GDO\DogBlackjack\Method;
 
+use GDO\Core\GDT;
 use GDO\Dog\DOG_Command;
 use GDO\Dog\DOG_Message;
 use GDO\Dog\DOG_User;
@@ -32,7 +33,7 @@ final class Stats extends DOG_Command
 		];
 	}
 
-	public function dogExecute(DOG_Message $message, DOG_User $user = null): bool
+	public function dogExecute(DOG_Message $message, DOG_User $user = null): GDT
 	{
 		if ($user)
 		{
@@ -44,7 +45,7 @@ final class Stats extends DOG_Command
 		}
 	}
 
-	private function userstats(DOG_Message $message, DOG_User $user): bool
+	private function userstats(DOG_Message $message, DOG_User $user): GDT
 	{
 		$m = Module_DogBlackjack::instance();
 		return $message->rply('msg_blackjack_user_stats', [
@@ -57,7 +58,7 @@ final class Stats extends DOG_Command
 		]);
 	}
 
-	private function globalStats(DOG_Message $message): bool
+	private function globalStats(DOG_Message $message): GDT
 	{
 		$m = Module_DogBlackjack::instance();
 		$message->rply('msg_blackjack_global_stats', [
@@ -70,7 +71,7 @@ final class Stats extends DOG_Command
 		return $this->bestPlayerStats($message);
 	}
 
-	private function bestPlayerStats(DOG_Message $message): bool
+	private function bestPlayerStats(DOG_Message $message): GDT
 	{
 		$m = Module_DogBlackjack::instance();
 		if ($players = $this->getBestPlayers())
@@ -91,7 +92,7 @@ final class Stats extends DOG_Command
 				implode(', ', $out),
 			]);
 		}
-		return true;
+		return $message->rply('msg_blackjack_no_players');
 	}
 
 	/**
